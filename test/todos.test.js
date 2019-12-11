@@ -52,7 +52,18 @@ describe('app routes', () => {
           title: 'clean dishes',
           __v: 0
         });
-        
+      });
+  });
+
+  it('can delete a todo by id', () => {
+    return request(app)
+      .delete(`/api/vi/todos${todo2._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: todo2._id.toString(),
+          title: 'take out trash',
+          __v: 0
+        });
       });
   });
 });
