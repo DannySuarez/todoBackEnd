@@ -57,7 +57,7 @@ describe('app routes', () => {
 
   it('can delete a todo by id', () => {
     return request(app)
-      .delete(`/api/vi/todos${todo2._id}`)
+      .delete(`/api/v1/todos/${todo2._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: todo2._id.toString(),
