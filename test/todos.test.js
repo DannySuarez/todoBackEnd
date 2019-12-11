@@ -15,12 +15,19 @@ describe('app routes', () => {
     return mongoose.connection.dropDatabase();
   });
 
+  let todo = null;
+  let todo2 = null;
+  beforeEach(async() => {
+    todo = JSON.parse(JSON.stringify(await Todo.create({ title: 'clean dishes' })));
+    todo2 = JSON.parse(JSON.stringify(await Todo.create({ title: 'take out trash' })));
+
+  });
+
   afterAll(() => {
     return mongoose.connection.close();
   });
 
   it('can create a todo', () => {
-
     return request(app)
       .post('/api/v1/todos')
       .send({
@@ -33,6 +40,19 @@ describe('app routes', () => {
           title: 'pass this test'
         });
       });
+  });
 
+  it('can get all todos', () => {
+    return request(app)
+      .get('/api/v1/todos')
+      .then(res => {
+        expect(res.body).toHaveLength(2);
+        expect(res.body).toContainEqual({
+          _id: todo._id.toString(),
+          title: 'clean dishes',
+          __v: 0
+        });
+        
+      });
   });
 });
