@@ -6,7 +6,7 @@ const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Todo = require('../lib/models/Todo');
 
-describe('app routes', () => {
+describe('todos route', () => {
   beforeAll(() => {
     connect();
   });
@@ -55,6 +55,20 @@ describe('app routes', () => {
       });
   });
 
+  it('can mark a todo as completed', () => {
+    return request(app)
+      .patch(`/api/v1/todos/${todo._id}`)
+      .send({ completed: true })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: todo._id.toString(),
+          title: 'clean dishes',
+          completed: true,
+          __v: 0
+        });
+      });
+  });
+
   it('can delete a todo by id', () => {
     return request(app)
       .delete(`/api/v1/todos/${todo2._id}`)
@@ -66,4 +80,5 @@ describe('app routes', () => {
         });
       });
   });
+
 });
