@@ -17,10 +17,11 @@ describe('todos route', () => {
 
   let todo = null;
   let todo2 = null;
+  let todo3 = null;
   beforeEach(async() => {
     todo = JSON.parse(JSON.stringify(await Todo.create({ title: 'clean dishes' })));
     todo2 = JSON.parse(JSON.stringify(await Todo.create({ title: 'take out trash' })));
-
+    todo3 = JSON.parse(JSON.stringify(await Todo.create({ title: 'take a break', completed: true })));
   });
 
   afterAll(() => {
@@ -46,7 +47,7 @@ describe('todos route', () => {
     return request(app)
       .get('/api/v1/todos')
       .then(res => {
-        expect(res.body).toHaveLength(2);
+        expect(res.body).toHaveLength(3);
         expect(res.body).toContainEqual({
           _id: todo._id.toString(),
           title: 'clean dishes',
@@ -64,6 +65,20 @@ describe('todos route', () => {
           _id: todo._id.toString(),
           title: 'clean dishes',
           completed: true,
+          __v: 0
+        });
+      });
+  });
+
+  it('can mark a completed todo as false', () => {
+    return request(app)
+      .patch(`/api/v1/todos/${todo3._id}`)
+      .send({ completed: false })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: todo3._id.toString(),
+          title: 'take a break',
+          completed: false,
           __v: 0
         });
       });
